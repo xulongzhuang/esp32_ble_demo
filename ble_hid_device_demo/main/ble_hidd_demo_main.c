@@ -170,6 +170,12 @@ void hid_demo_task(void *pvParameters)
             esp_hidd_send_consumer_value(hid_conn_id, HID_CONSUMER_EJECT, true);
             vTaskDelay(100 / portTICK_PERIOD_MS);
             esp_hidd_send_consumer_value(hid_conn_id, HID_CONSUMER_EJECT, false);
+
+            // test CapsLock LED state return
+            uint8_t key_vaule = {HID_KEY_CAPS_LOCK};
+            esp_hidd_send_keyboard_value(hid_conn_id, 0, &key_vaule, 1);
+            vTaskDelay(100 / portTICK_PERIOD_MS);
+            esp_hidd_send_keyboard_value(hid_conn_id, 0, &key_vaule, 0); // key pop
         }
     }
 }

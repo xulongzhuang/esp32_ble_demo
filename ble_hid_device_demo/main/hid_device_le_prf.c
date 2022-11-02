@@ -292,7 +292,7 @@ static const uint8_t char_prop_write_nr = ESP_GATT_CHAR_PROP_BIT_WRITE_NR;
 static const uint8_t char_prop_read_write = ESP_GATT_CHAR_PROP_BIT_WRITE|ESP_GATT_CHAR_PROP_BIT_READ;
 static const uint8_t char_prop_read_notify = ESP_GATT_CHAR_PROP_BIT_READ|ESP_GATT_CHAR_PROP_BIT_NOTIFY;
 static const uint8_t char_prop_read_write_notify = ESP_GATT_CHAR_PROP_BIT_READ|ESP_GATT_CHAR_PROP_BIT_WRITE|ESP_GATT_CHAR_PROP_BIT_NOTIFY;
-
+static const uint8_t char_prop_read_write_nr = ESP_GATT_CHAR_PROP_BIT_WRITE|ESP_GATT_CHAR_PROP_BIT_READ|ESP_GATT_CHAR_PROP_BIT_WRITE_NR;
 /// battary Service
 static const uint16_t battary_svc = ESP_GATT_UUID_BATTERY_SERVICE_SVC;
 
@@ -434,7 +434,7 @@ static esp_gatts_attr_db_t hidd_le_gatt_db[HIDD_LE_IDX_NB] =
     [HIDD_LE_IDX_REPORT_LED_OUT_CHAR]         = {{ESP_GATT_AUTO_RSP}, {ESP_UUID_LEN_16, (uint8_t *)&character_declaration_uuid,
                                                                          ESP_GATT_PERM_READ,
                                                                          CHAR_DECLARATION_SIZE, CHAR_DECLARATION_SIZE,
-                                                                         (uint8_t *)&char_prop_read_write}},
+                                                                         (uint8_t *)&char_prop_read_write_nr}},
 
     [HIDD_LE_IDX_REPORT_LED_OUT_VAL]            = {{ESP_GATT_AUTO_RSP}, {ESP_UUID_LEN_16, (uint8_t *)&hid_report_uuid,
                                                                        ESP_GATT_PERM_READ|ESP_GATT_PERM_WRITE,
@@ -594,6 +594,7 @@ void esp_hidd_prf_cb_hdl(esp_gatts_cb_event_t event, esp_gatt_if_t gatts_if,
         case ESP_GATTS_CLOSE_EVT:
             break;
         case ESP_GATTS_WRITE_EVT: {
+            esp_log_buffer_hex("WRITE", param->write.value, param->write.len);
 #if (SUPPORT_REPORT_VENDOR == true)
             esp_hidd_cb_param_t cb_param = {0};
             if (param->write.handle == hidd_le_env.hidd_inst.att_tbl[HIDD_LE_IDX_REPORT_VENDOR_OUT_VAL] &&
