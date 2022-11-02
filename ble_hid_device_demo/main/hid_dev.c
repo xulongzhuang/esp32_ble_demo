@@ -129,6 +129,9 @@ void hid_consumer_build_report(uint8_t *buffer, consumer_cmd_t cmd)
             HID_CC_RPT_SET_BUTTON(buffer, HID_CC_RPT_STOP);
             break;
 
+        case HID_CONSUMER_EJECT:
+            HID_CC_RPT_SET_BUTTON(buffer, HID_CC_RPT_EJECT);
+
         default:
             break;
     }
